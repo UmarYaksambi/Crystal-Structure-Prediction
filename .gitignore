@@ -1,0 +1,29 @@
+# Ignore Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environment
+crystalenv/
+
+# Ignore Streamlit configuration directory
+.streamlit/
+
+# Ignore model and other large files
+model_1.h5
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore any IDE/editor-specific files (e.g., VSCode, PyCharm)
+.vscode/
+.idea/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temporary files
+*.log
+*.bak
+*.swp
