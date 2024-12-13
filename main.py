@@ -120,25 +120,24 @@ def get_ai_explanation(prediction_result, input_params):
     """
     try:
         chat_completion = client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a materials science expert specializing in crystal structure prediction."
-                },
-                {
-                    "role": "user",
-                    "content": f"""Provide a scientific explanation for the predicted crystal structure 
-                    based on these parameters:
-                    Predicted Structure: {prediction_result['predicted_structure']}
-                    Stability Index: {prediction_result['stability_index']:.4f}
-                    
-                    Input Parameters:
-                    {', '.join(f'{k}: {v}' for k, v in input_params.items())}
-                    
-                    Explain the structural characteristics, potential bonding mechanisms, 
-                    and factors influencing the crystal structure in a concise, technical manner."""
-                }
-            ],
+            messages=[{
+                "role": "system",
+                "content": "You are a materials science expert specializing in crystal structure prediction."
+            },
+            {
+                "role": "user",
+                "content": f"""Provide a scientific explanation for the predicted crystal structure 
+                based on these parameters:
+                Predicted Structure: {prediction_result['predicted_structure']}
+                Stability Index: {prediction_result['stability_index']:.4f}
+                
+                Input Parameters:
+                {', '.join(f'{k}: {v}' for k, v in input_params.items())}
+                
+                Explain the structural characteristics, potential bonding mechanisms, 
+                and factors influencing the crystal structure in a concise, technical manner.
+                Keep the explaination within 200 words"""
+            }],
             model="llama3-70b-8192",
             max_tokens=300
         )
@@ -148,28 +147,36 @@ def get_ai_explanation(prediction_result, input_params):
 
 # Streamlit UI
 def main():
-    st.title("Crystal Structure Prediction")
+    # Apply custom styling
+    st.markdown("""
+        <style>
+            .main {
+                background-color: #F6F0ED;
+                color: #28536B;
+            }
+            .stButton>button {
+                background-color: #28536B;
+                color: white;
+                border-radius: 10px;
+                font-size: 16px;
+                padding: 10px 20px;
+                border: none;
+            }
+            .stSelectbox>div {
+                font-size: 14px;
+                color: #28536B;
+            }
+            .stTextInput>div {
+                font-size: 14px;
+                color: #28536B;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.title("Crystal Structure Prediction 👩‍🔬")
 
     # Input fields for all required parameters
     input_params = {}
-
-    input_params['r(AXII)(Å)'] = st.number_input("r(AXII)(Å)", value=1.12)
-    input_params['r(AVI)(Å)'] = st.number_input("r(AVI)(Å)", value=1.12)
-    input_params['r(BVI)(Å)'] = st.number_input("r(BVI)(Å)", value=1.12)
-    input_params['EN(A)'] = st.number_input("EN(A)", value=1.10)
-    input_params['EN(B)'] = st.number_input("EN(B)", value=1.10)
-    input_params['l(A-O)(Å)'] = st.number_input("l(A-O)(Å)", value=0.0)
-    input_params['l(B-O)(Å)'] = st.number_input("l(B-O)(Å)", value=0.0)
-    input_params['ΔENR'] = st.number_input("ΔENR", value=-3.248)
-    input_params['tG'] = st.number_input("tG", value=0.707107)
-    input_params['μ'] = st.number_input("μ", value=0.800000)
-    
-    # Valency options (A and B site)
-    valency_a = st.selectbox('Valency for A site', ['-', '0', '1', '2', '3', '4', '5'])
-    input_params['v(A)'] = valency_a
-
-    valency_b = st.selectbox('Valency for B site', ['-', '0', '1', '2', '3', '4', '5'])
-    input_params['v(B)'] = valency_b
 
     # Element selection (A and B sites)
     element_a = st.selectbox('Element for A site', elements_a)
@@ -178,19 +185,39 @@ def main():
     element_b = st.selectbox('Element for B site', elements_b)
     input_params['Second Element'] = element_b
 
-    # Predict button
-    if st.button("Predict Crystal Structure"):
-        result = predict_crystal_structure(input_params)
-        
-        if result:
-            st.write(f"Predicted Structure: {result['predicted_structure']}")
-            st.write(f"Stability Index: {result['stability_index']:.2f}")
+    # Valency options (A and B site)
+    valency_a = st.selectbox('Valency for A site', ['0', '1', '2', '3', '4', '5'])
+    input_params['v(A)'] = valency_a
 
-            explanation = get_ai_explanation(result, input_params)
+    valency_b = st.selectbox('Valency for B site', ['0', '1', '2', '3', '4', '5'])
+    input_params['v(B)'] = valency_b
+
+    input_params['r(AXII)(Å)'] = st.number_input("r(AXII)(Å)", value=1.12, step=0.01)
+    input_params['r(AVI)(Å)'] = st.number_input("r(AVI)(Å)", value=1.12, step=0.01)
+    input_params['r(BVI)(Å)'] = st.number_input("r(BVI)(Å)", value=1.12, step=0.01)
+    input_params['EN(A)'] = st.number_input("EN(A)", value=1.10, step=0.01)
+    input_params['EN(B)'] = st.number_input("EN(B)", value=1.10, step=0.01)
+    input_params['l(A-O)(Å)'] = st.number_input("l(A-O)(Å)", value=0.0, step=0.1)
+    input_params['l(B-O)(Å)'] = st.number_input("l(B-O)(Å)", value=0.0, step=0.1)
+    input_params['ΔENR'] = st.number_input("ΔENR", value=-3.248, step=0.01)
+    input_params['tG'] = st.number_input("tG", value=0.707107, step=0.01)
+    input_params['μ'] = st.number_input("μ", value=0.800000, step=0.01)
     
-            # Display Explanation
-            st.subheader("Scientific Explanation")
-            st.info(explanation)
+
+    # Predict button with a polished look
+    if st.button("Predict Crystal Structure"):
+        with st.spinner("Predicting..."):
+            result = predict_crystal_structure(input_params)
+        
+            if result:
+                st.markdown(f"**Predicted Structure**: <span style='font-size: 36px; font-weight: bold; color: #28536B;'> {result['predicted_structure'].upper()}</span>", unsafe_allow_html=True)
+                st.markdown(f"**Stability Index**: <span style='font-size: 36px; font-weight: bold; color: #C2948A;'> {result['stability_index']:.2f}</span>", unsafe_allow_html=True)
+
+                explanation = get_ai_explanation(result, input_params)
+    
+                # Display Explanation
+                st.subheader("Scientific Explanation")
+                st.info(explanation)
 
 # Run the app
 if __name__ == "__main__":
