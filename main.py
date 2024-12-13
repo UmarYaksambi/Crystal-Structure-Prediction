@@ -2,6 +2,11 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import streamlit as st
+import groq
+from groq import Groq
+
+# Initialize Groq client (replace with your actual API key)
+client = Groq(api_key=st.secrets.get("GROQ_API_KEY"))
 
 # Load the model (assuming it's already trained and saved as 'model_1.h5')
 @st.cache_resource
@@ -108,6 +113,38 @@ def predict_crystal_structure(input_params):
     except Exception as e:
         st.error(f"Detailed Prediction Error: {e}")
         return None
+    
+def get_ai_explanation(prediction_result, input_params):
+    """
+    Use Groq API to generate an explanation of the crystal structure
+    """
+    try:
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a materials science expert specializing in crystal structure prediction."
+                },
+                {
+                    "role": "user",
+                    "content": f"""Provide a scientific explanation for the predicted crystal structure 
+                    based on these parameters:
+                    Predicted Structure: {prediction_result['predicted_structure']}
+                    Stability Index: {prediction_result['stability_index']:.4f}
+                    
+                    Input Parameters:
+                    {', '.join(f'{k}: {v}' for k, v in input_params.items())}
+                    
+                    Explain the structural characteristics, potential bonding mechanisms, 
+                    and factors influencing the crystal structure in a concise, technical manner."""
+                }
+            ],
+            model="llama3-70b-8192",
+            max_tokens=300
+        )
+        return chat_completion.choices[0].message.content
+    except Exception as e:
+        return f"Error generating explanation: {str(e)}"
 
 # Streamlit UI
 def main():
@@ -148,6 +185,12 @@ def main():
         if result:
             st.write(f"Predicted Structure: {result['predicted_structure']}")
             st.write(f"Stability Index: {result['stability_index']:.2f}")
+
+            explanation = get_ai_explanation(result, input_params)
+    
+            # Display Explanation
+            st.subheader("Scientific Explanation")
+            st.info(explanation)
 
 # Run the app
 if __name__ == "__main__":
