@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import streamlit as st
-import groq
 from groq import Groq
 
 # Initialize Groq client (replace with your actual API key)
@@ -178,20 +177,6 @@ def main():
     # Input fields for all required parameters
     input_params = {}
 
-    # Element selection (A and B sites)
-    element_a = st.selectbox('Element for A site', elements_a)
-    input_params['First Element'] = element_a
-
-    element_b = st.selectbox('Element for B site', elements_b)
-    input_params['Second Element'] = element_b
-
-    # Valency options (A and B site)
-    valency_a = st.selectbox('Valency for A site', ['0', '1', '2', '3', '4', '5'])
-    input_params['v(A)'] = valency_a
-
-    valency_b = st.selectbox('Valency for B site', ['0', '1', '2', '3', '4', '5'])
-    input_params['v(B)'] = valency_b
-
     input_params['r(AXII)(Å)'] = st.number_input("r(AXII)(Å)", value=1.12, step=0.01)
     input_params['r(AVI)(Å)'] = st.number_input("r(AVI)(Å)", value=1.12, step=0.01)
     input_params['r(BVI)(Å)'] = st.number_input("r(BVI)(Å)", value=1.12, step=0.01)
@@ -203,6 +188,19 @@ def main():
     input_params['tG'] = st.number_input("tG", value=0.707107, step=0.01)
     input_params['μ'] = st.number_input("μ", value=0.800000, step=0.01)
     
+    # Valency options (A and B site)
+    valency_a = st.selectbox('Valency for A site', ['0', '1', '2', '3', '4', '5', '-'])
+    input_params['v(A)'] = valency_a
+
+    valency_b = st.selectbox('Valency for B site', ['0', '1', '2', '3', '4', '5', '-'])
+    input_params['v(B)'] = valency_b
+
+    # Element selection (A and B sites)
+    element_a = st.selectbox('Element for A site', elements_a)
+    input_params['First Element'] = element_a
+
+    element_b = st.selectbox('Element for B site', elements_b)
+    input_params['Second Element'] = element_b
 
     # Predict button with a polished look
     if st.button("Predict Crystal Structure"):

@@ -2,3 +2,4 @@ streamlit
 groq
 numpy
 pandas
+tensorflow

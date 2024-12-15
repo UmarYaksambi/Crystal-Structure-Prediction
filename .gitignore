@@ -9,9 +9,6 @@ crystalenv/
 # Ignore Streamlit configuration directory
 .streamlit/
 
-# Ignore model and other large files
-model_1.h5
-
 # Ignore Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
