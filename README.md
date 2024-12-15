@@ -16,7 +16,7 @@ This project provides a **Streamlit-based web application** for predicting cryst
 ## Installation
 1. Clone this repository:
    ```bash
-   git clone https://github.com/<username>/crystal-structure-predictor.git
+   git clone https://github.com/UmarYaksambi/crystal-structure-predictor.git
    cd crystal-structure-predictor
    ```
 2. Install the required dependencies:
