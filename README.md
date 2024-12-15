@@ -78,4 +78,5 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contact
 [☕ Buy Me a Coffee](https://www.buymeacoffee.com/umaryaksambi)
+
 For questions or support, contact **Umar Yaksambi** at [umaryaksambi@gmail.com](mailto:umaryaksambi@gmail.com).
