@@ -3,3 +3,4 @@ groq
 numpy
 pandas
 tensorflow
+supabase
