@@ -77,4 +77,5 @@ The application uses the **Groq API** to generate explanations for the predicted
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Contact
-For questions or support, contact **Muhammad Umar Yaksambi** at [umaryaksambi@gmail.com](mailto:umaryaksambi@gmail.com).
+[☕ Buy Me a Coffee](https://www.buymeacoffee.com/umaryaksambi)
+For questions or support, contact **Umar Yaksambi** at [umaryaksambi@gmail.com](mailto:umaryaksambi@gmail.com).
