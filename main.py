@@ -3,17 +3,16 @@ import pandas as pd
 import tensorflow as tf
 import streamlit as st
 from groq import Groq
-
+from database import insert_data, init_supabase
 # Initialize Groq client (replace with your actual API key)
 client = Groq(api_key=st.secrets.get("GROQ_API_KEY"))
-
+supabase = init_supabase()
 # Load the model (assuming it's already trained and saved as 'model_1.h5')
 @st.cache_resource
 def load_model():
     return tf.keras.models.load_model('model_1.h5')
 
 model = load_model()
-
 # List of all possible elements for A and B sites
 elements_a = [
     'Ac', 'Ag', 'Al', 'As', 'Au', 'B', 'Ba', 'Be', 'Bi', 'Ca', 'Cd', 'Ce', 
@@ -217,6 +216,10 @@ def main():
                 st.subheader("Scientific Explanation")
                 st.info(explanation)
 
+                # Save input and output to Supabase
+                data_to_save = {**input_params, **result}
+                response = insert_data(supabase, "Mechanical project database", data_to_save)
+                #st.success("Data saved to database!" if response.status_code == 200 else "Error saving data!")
 # Run the app
 if __name__ == "__main__":
     main()
