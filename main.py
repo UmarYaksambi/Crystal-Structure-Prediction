@@ -4,6 +4,7 @@ import tensorflow as tf
 import streamlit as st
 from groq import Groq
 from database import insert_data, init_supabase
+
 # Initialize Groq client (replace with your actual API key)
 client = Groq(api_key=st.secrets.get("GROQ_API_KEY"))
 supabase = init_supabase()
